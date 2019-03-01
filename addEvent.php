@@ -14,35 +14,61 @@ if (isset($_POST['guardar'])){
 	$idinscripciones = $_POST['idinscripciones'];
 	$idsubservicios = $_POST['idsubservicios'];
 
-	$sql1 = "SELECT * FROM calendario ca
-	INNER JOIN inscripciones ins 
-	on ca.inscripciones_idinscripciones = ins.idinscripciones
-	WHERE ca.subservicios_idsubservicios = $idsubservicios
-	AND ca.inscripciones_idinscripciones = $idinscripciones
-	AND ca.hora ='$hora'
-	AND ca.fecha ='$fecha'";
+	$today= date("Y-m-d", time() );
 
-	$query1 = $con->prepare( $sql1 );
-	$query1->execute();
-	$count = $query1->rowCount();
+	if($fecha >= $today){
 
-	if($count == 0){
+		$sql1 = "SELECT * FROM calendario ca
+		INNER JOIN inscripciones ins 
+		on ca.inscripciones_idinscripciones = ins.idinscripciones
+		WHERE ca.subservicios_idsubservicios = $idsubservicios
+		AND ca.hora ='$hora'
+		AND ca.fecha ='$fecha'";
 
-		$sql = "INSERT INTO calendario ( fecha, hora, estado, inscripciones_idinscripciones, subservicios_idsubservicios) 
-				VALUES ('$fecha','$hora', $estado, $idinscripciones, $idsubservicios)";
+		$query1 = $con->prepare( $sql1 );
+		$query1->execute();
+		$count = $query1->rowCount();
+
+		if($count == 0){
+
+			$sql1 = "SELECT * FROM calendario ca
+			INNER JOIN inscripciones ins 
+			on ca.inscripciones_idinscripciones = ins.idinscripciones
+			WHERE ca.subservicios_idsubservicios = $idsubservicios
+			AND ca.inscripciones_idinscripciones = $idinscripciones
+			AND ca.hora ='$hora'
+			AND ca.fecha ='$fecha'";
 		
-		$query = $con->prepare( $sql );
+			$query1 = $con->prepare( $sql1 );
+			$query1->execute();
+			$count2 = $query1->rowCount();
 
 
-		if ($query->execute()) {
-			header('Location: calendar.php?e=true');
+			if($count2==0){
+
+				$sql = "INSERT INTO calendario ( fecha, hora, estado, inscripciones_idinscripciones, subservicios_idsubservicios) 
+						VALUES ('$fecha','$hora', $estado, $idinscripciones, $idsubservicios)";
+				
+				$query = $con->prepare( $sql );
+
+
+				if ($query->execute()) {
+					header('Location: calendar.php?e=true');
+				}
+				else{
+					header('Location: calendar.php?rr=true');
+				}
+
+			}
+			else{
+				header('Location: calendar.php?err=true');
+			}
 		}
 		else{
-			header('Location: calendar.php?er2=true');
+			header('Location: calendar.php?er=true');
 		}
-	}
-	else{
-		header('Location: calendar.php?er=true');
+	}else{
+		header('Location: calendar.php?ter=true');
 	}
 
 }

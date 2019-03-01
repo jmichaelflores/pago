@@ -7,6 +7,8 @@ if($_SESSION['tipousuario']=='usuario') {
 $idinscripciones = $_SESSION['inscripciones_idinscripciones'];
 
 $sql = "SELECT * FROM subservicios sb
+inner join servicio se
+on sb.servicio_idservicio = se.idservicio
 inner join calendario ca
 on sb.idsubservicios = ca.subservicios_idsubservicios";
 
@@ -106,7 +108,14 @@ $events = $req->fetchAll();
 						  Ese horario ya se encuentra definido
 						</div>
 						</center>");
-        	}
+					}
+					if (isset($_GET['ter'])) {
+        		echo ("<center>
+        			<div class='alert alert-danger' role='alert'>
+						  La fecha es incorrecta
+						</div>
+						</center>");
+					}
          ?>
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -245,7 +254,7 @@ $events = $req->fetchAll();
 					<label for="start" class="col-sm-2 control-label">Hora Inicio </label>
 					<div class="col-sm-10">
 					   <input type="time" id="iniciotime" name="iniciotime" min="7:00" max="14:00" step="3600" <?php echo "$en"; ?>>
-					   <span class="note">Horario (1 Hora Clase)</span>
+					   <span class="note">Horario (1 Hora)</span>
 					</div>
 				  </div>
 
@@ -354,7 +363,8 @@ $events = $req->fetchAll();
 
 		else{
 
-			if($_SESSION['tipousuario']=='usuario' && $event['inscripciones_idinscripciones']==$_SESSION['inscripciones_idinscripciones']){?>
+			if($_SESSION['tipousuario']=='usuario' 
+			&& $event['inscripciones_idinscripciones']==$_SESSION['inscripciones_idinscripciones']){?>
 					{	id: "<?php echo $event['idcalendario']; ?>",
 						idservicio: "<?php echo $event['idsubservicios']; ?>",
 						title: "<?php echo $event['subservicio']; ?>",
@@ -364,23 +374,14 @@ $events = $req->fetchAll();
 					},
 				<?php
 				}
-				else if($event['inscripciones_idinscripciones']!=$_SESSION['inscripciones_idinscripciones']){?>
+				else if($event['idservicio']==$_SESSION['idservicios']){?>
 				{	id: "<?php echo $event['idcalendario']; ?>",
 					idservicio: "<?php echo $event['idsubservicios']; ?>",
-					title: "<?php echo 'RESERVADO'; ?>",
+					//cambiar por el de reservado
+					title: "<?php echo 'Reservado'.'\n'.$event['subservicio']; ?>",
 					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					color: "#cc0000",
-				},
-				<?php
-				}
-				else{?>
-				{	id: "<?php echo $event['idcalendario']; ?>",
-					idservicio: "<?php echo $event['idsubservicios']; ?>",
-					title: "<?php echo 'LIBRE'; ?>",
-					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
-					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
-					color: "##298A08",
 				},
 
 	<?php } 
