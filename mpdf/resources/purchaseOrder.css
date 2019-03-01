@@ -1,0 +1,196 @@
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: DejaVuSansCondensed;
+}
+
+.logo_cont h2{
+    margin-top: -55px;
+    margin-left: 110px;
+}
+
+.logo{
+    height: 90px;
+}
+
+.PDF_header .title{
+    position: relative;
+}
+
+.PDF_header .title h3 {
+    text-align: center;
+    position: relative;
+}
+
+table {
+	font-family: DejaVuSansCondensed;
+	border-collapse: collapse;
+	vertical-align: middle;
+	width: 100%;
+}
+
+.data{
+    border: 1px solid #000;
+    border-radius: 15px;
+    padding: 5px 5px;
+}
+
+.data .cont{
+    width: 50%;
+    font-size: 11px;
+}
+
+.data .cont h4{text-align: center;}
+
+.data .cont .cont_cont{
+    margin: 10px 0;
+}
+
+.data .cont .title{
+    width: 20%;
+    font-weight: bold;
+}
+
+.data .cont .content{
+    margin-left: 20%;
+    margin-top: -15px;
+    width: 80%;
+}
+
+.data .cont .xtra .title2{
+    font-weight: bold;
+}
+
+.data .Fusalmo{
+    float: right;
+}
+
+.payment{
+    margin-top: 15px;
+    padding: 0px 10px 5px 10px;
+    border: 1px solid #000;
+    border-radius: 15px;
+    font-size: 11px;
+}
+
+.payment .cont_cont{
+    margin: 10px 0;
+}
+
+.payment .title{
+    width: 20%;
+    font-weight: bold;
+}
+
+.payment .content{
+    margin-left: 20%;
+    margin-top: -18px;
+    height: 15px;
+    width: 80%;
+    border-bottom: 1px solid #ccc;
+}
+
+.xtraData{
+    margin: 10px 0px;
+    width: 100%;    
+}
+
+.xtraData .xtra{
+    width: 45%;
+    border: 1px solid #000;
+    border-radius: 15px;
+    font-size: 11px;
+    padding: 1.5%;
+}
+
+.xtraData .bill{
+    margin-top: -39px;
+    float: right;
+}   
+
+.xtraData .title{
+    font-weight: bold;
+}
+
+.xtrax2{
+    margin: 20px 0px;
+}
+
+.xtrax2 .xtra{
+    width: 47.5%;
+    border: 1px solid #000;
+    border-radius: 15px;
+    font-size: 11px;
+    padding: 1%;
+}
+
+.xtraData .a{
+    text-align: center
+}
+
+.xtraData .a{
+    padding: 0px 1%;
+}
+
+.xtraData .order{
+    margin-top: -125px;
+    float: right;
+}
+
+.xtraData .order .cont_cont{
+    margin: 10px 0;
+}
+
+.xtraData .order .title{
+    width: 30%;
+    font-weight: bold;
+}
+
+.xtraData .order .content{
+    margin-left: 30%;
+    margin-top: -16px;
+    height: 15px;
+    width: 70%;
+    border-bottom: 1px solid #ccc;
+}
+
+.xtra3{
+    /* background: red; */
+    text-align: center;
+    border: 1px solid #000;
+    border-radius: 15px;
+    padding-bottom: 15%;
+}
+
+th {
+	font-weight: bold;
+	vertical-align: center;
+	text-align: center;
+	font-size: 14px;
+	padding: 5px;
+	vertical-align: middle;
+	background: #1976D2;
+	color: #fff;
+}
+
+td{
+	font-size: 12px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 4px;
+    border-right: 1px solid #1976D2;
+    border-left: 1px solid #1976D2;
+}
+
+.total-row{
+    color: #fff;
+    background: #1976D2;
+}
+
+.total-row td{
+    color: #fff;
+}
