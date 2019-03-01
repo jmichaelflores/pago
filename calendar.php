@@ -4,16 +4,11 @@ require_once('conexion.php');
 
 if($_SESSION['tipousuario']=='usuario') {
 
-$sql = "SELECT * FROM subservicios sb
-inner join servicio se
-on sb.servicio_idservicio = se.idservicio
-inner join inscripciones ins
-on se.idservicio = ins.servicio_idservicio
-inner join calendario ca
-on ca.inscripciones_idinscripciones = ins.idinscripciones";
-
-
 $idinscripciones = $_SESSION['inscripciones_idinscripciones'];
+
+$sql = "SELECT * FROM subservicios sb
+inner join calendario ca
+on sb.idsubservicios = ca.subservicios_idsubservicios";
 
 $sqlsb = "SELECT * FROM subservicios sb
 inner join servicio se
@@ -31,18 +26,18 @@ $req2 = $con->prepare($sql2);
 $req2->execute();
 $countcalendario = $req2->rowCount();
 
+
 $req2 = $con->prepare($sqlsb);
 $req2->execute();
 $countsubservicio = $req2->rowCount();
 
+
 }
 elseif($_SESSION['tipousuario']=='administrador') {
 
-$sql = "SELECT * FROM servicio se
-inner join inscripciones ins
-on se.idservicio = ins.servicio_idservicio
+$sql = "SELECT * FROM subservicios sb
 inner join calendario ca
-on ca.inscripciones_idinscripciones = ins.idinscripciones";
+on sb.idsubservicios = ca.subservicios_idsubservicios";
 
 }
 else {
@@ -124,7 +119,7 @@ $events = $req->fetchAll();
         </div>
         <!-- /.row -->
 
-       <?php if($_SESSION['tipousuario']=='usuario' && $countcalendario <= $countsubservicio){?>
+       <?php if($_SESSION['tipousuario']=='usuario' && $countcalendario != $countsubservicio){?>
 		
 		<!-- Modal Agregar-->
 		<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -152,27 +147,38 @@ $events = $req->fetchAll();
 						on se.idservicio = ins.servicio_idservicio 
 						where ins.idinscripciones = $idinscripciones");
 
+						$query2 ="SELECT * FROM calendario ca
+						inner join subservicios sb
+						on ca.subservicios_idsubservicios = sb.idsubservicios
+						WHERE ca.inscripciones_idinscripciones =$idinscripciones";
+
+						$servicio = $con->prepare($query2);
+						$servicio->execute();
+						$servicios = $servicio->fetchAll();
+						$x2=$servicio->rowCount();
 						$req2 = $con->prepare($sql2);
 						$req2->execute();
+						//$req2->fetchAll();
 
-						$events2 = $req2->fetchAll();
-						var_dump($events2);
-						foreach ($events2 as $row) {?>
+						$x=0;
+						while($row = $req2->fetch()){
 
-							<option value="<?php echo $row['idsubservicios']; ?>" id="op">
-								<?php echo $row['subservicio']; ?>
-							</option>
+							if($servicios[$x]['subservicio'] != $row['subservicio']){
+	
+								echo"<option value='".$row['idsubservicios']."'>".$row['subservicio']."</option>";
+								
+							}
+							else{
+								 $x++;
+							}
+
 							
-					 <!--
-							Asi estaba solo con el servicio
-					  <input type="hidden" name="idservicio" class="form-control" 
-					  id="title" placeholder="" value="<?php //echo $row['idservicio']; ?>">
 
-					  <input type="text" name="title" class="form-control" 
-					  id="title" placeholder="" value="<?php //echo $row['nombre_servicio']; ?>" disabled='true'>
-						-->
-					<?php }?>
+						}
+							 
+							?>
 					</select>
+					
 					</div>
 				  </div>
 				  <div class="form-group">
@@ -337,8 +343,8 @@ $events = $req->fetchAll();
 			?>
 				{
 					id: "<?php echo $event['idcalendario']; ?>",
-					idservicio: "<?php echo $event['idservicio']; ?>",
-					title: "<?php echo $event['nombre_servicio']; ?>",
+					idservicio: "<?php echo $event['idsubservicios']; ?>",
+					title: "<?php echo $event['subservicio']; ?>",
 					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					color: "#0071c5",
@@ -348,24 +354,33 @@ $events = $req->fetchAll();
 
 		else{
 
-			if($_SESSION['tipousuario']=='usuario' && $event['servicio_idservicio']==$_SESSION['idservicios'] 
-				&& $event['idinscripciones']== $_SESSION['inscripciones_idinscripciones']){?>
-				{	id: "<?php echo $event['idcalendario']; ?>",
-					idservicio: "<?php echo $event['idservicio']; ?>",
-					title: "<?php echo $event['nombre_servicio']; ?>",
-					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
-					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
-					color: "#0071c5",
-				},
+			if($_SESSION['tipousuario']=='usuario' && $event['inscripciones_idinscripciones']==$_SESSION['inscripciones_idinscripciones']){?>
+					{	id: "<?php echo $event['idcalendario']; ?>",
+						idservicio: "<?php echo $event['idsubservicios']; ?>",
+						title: "<?php echo $event['subservicio']; ?>",
+						start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
+						end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
+						color: "#0071c5",
+					},
 				<?php
 				}
-				else if($event['servicio_idservicio']==$_SESSION['idservicios']){?>
+				else if($event['inscripciones_idinscripciones']!=$_SESSION['inscripciones_idinscripciones']){?>
 				{	id: "<?php echo $event['idcalendario']; ?>",
-					idservicio: "<?php echo $event['idservicio']; ?>",
-					title: "<?php echo $event['nombre_servicio']; ?>",
+					idservicio: "<?php echo $event['idsubservicios']; ?>",
+					title: "<?php echo 'RESERVADO'; ?>",
 					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
 					color: "#cc0000",
+				},
+				<?php
+				}
+				else{?>
+				{	id: "<?php echo $event['idcalendario']; ?>",
+					idservicio: "<?php echo $event['idsubservicios']; ?>",
+					title: "<?php echo 'LIBRE'; ?>",
+					start: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
+					end: "<?php echo $event['fecha'].' '.$event['hora']; ?>",
+					color: "##298A08",
 				},
 
 	<?php } 
